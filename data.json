@@ -1,0 +1,43 @@
+{   
+    'cursos':{
+
+    },
+    'ayudantias':{
+
+    },
+    'admistrador':{
+        'IIC1103': {
+            'secciones': 
+            [
+                {
+                'seccion': 1
+                'course_id': id,
+                'folders':{
+                    'carpeta1':{
+                        'name': 'name',
+                        'url': 'urljiji',
+                        'folder_id': 'folder_id'
+                        'parent': 'folder_id'
+
+                        },
+
+                    },
+                'files': {
+                    'file_name':{
+                        parent: name,
+                        file_id: file_id,
+                        download: url, 
+                        
+                    }
+                        
+                    
+                }
+            }
+
+        },
+        s2..
+        
+    }
+    }
+    
+}
