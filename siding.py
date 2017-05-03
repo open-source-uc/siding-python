@@ -59,7 +59,7 @@ class Siding():
 
         return resp
 
-    def upload_homework(self, course_id, folder_id, desc, ffile, filepath=None, pos=2, vis='si'):
+    def upload_file(self, course_id, folder_id, desc, ffile, filepath=None, pos=2, vis='si'):
         if not(vis in ['si', 'no']):
             vis = 'no'
         if not(filepath):
@@ -74,11 +74,11 @@ class Siding():
             'MAX_FILE_SIZE': '104857600'
         }
         files = {
-            'archivo_up': (ffile, open(ffile, 'rb'))
+            'archivo_up': (ffile, open(filepath, 'rb'))
         }
 
         resp = self._session.post(
-            _urls['new_file'].format(nrc, folder),
+            _urls['new_file'].format(course_id, folder_id),
             data=data,
             files=files
         )
@@ -151,23 +151,13 @@ class Siding():
         resp = self._session.get(_urls['courses'])
         soup = bs(resp.content, 'html.parser')
 
-        cursos = self._get_courses(soup, 'alumno')
-        administracion = self._get_courses(soup, "administrador")
-        ayudantias = self._get_courses(soup, "donde es ayudante")
-        #[self.get_course_treefor course in cursos]
-        self.get_course_tree(cursos[1]['href'])
+        courses = self._get_courses(soup, 'alumno')
+        admin = self._get_courses(soup, "administrador")
+        teaching = self._get_courses(soup, "donde es ayudante")
 
-    def get_course_tree(self, url):
-        base = Siding._urls['base']
-        _url = base + url
-        print(_url)
-
-        resp = self._session.get(_url)
-        soup = bs(resp.content, 'html.parser')
-        carpetas = soup.find_all(
-            'a', href=re.compile('acc_carp=abrir_carpeta'))
-        print(carpetas)
-
+        self.admin = [Course(_urls['base'],curso) for curso in  admin]
+        [course.get_file_tree(self._session) for course in self.administrator]
+  
     def get_links_from_table(self, td):
         table = td.parent.parent
         links = table.find_all('a', href=re.compile(
@@ -176,20 +166,16 @@ class Siding():
 
 def main():
     s = Siding()
-    #print(s._session.cookies)
-    # print(s.get_page('https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml?accion_curso=carpetas&acc_carp=borrar_archivo&id_curso_ic=9151&id_carpeta=56865&id_archivo=357336').text)
-    desc = "Test"
-    ffile = "log.py"
 #	r = s.upload_homework(desc,ffile)
     # print(r.text)
     # print(r.status_code)
-    #s.get_courses()
+    s.get_courses()
 
     #r2 = s.delete_file()
     # print(r2.text)
     # print(r2.status_code)
 
-    s.new_form('1','2','3','4','5','6','SI')
+    #s.new_form('1','2','3','4','5','6','SI')
 if __name__ == '__main__':
     main()
 
