@@ -12,7 +12,7 @@ descs = ['Compilado de Interrogaciones 1', 'Recordatorio de contenidos I1']
 
 aviso = '''Estimados,
 
-Les recuerdo que esta semana no hay laboratorios, ya que ridieron la interrogación.
+Se encuentra subida la tarea 2.
 
 Saludos,
 Equipo de Coordinación.''' 
@@ -39,7 +39,7 @@ def subir_archivos(folders,files,file_names,descs):
 def main():
   #abrir_formulario()
   #subir_archivos(ies_pasadas,archivos,file_names,descs)
-  avisos(aviso,'Laboratorios')
+  avisos(aviso,'Tarea 2')
 if __name__ == '__main__':
   main()
 

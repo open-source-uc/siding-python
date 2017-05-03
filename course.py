@@ -3,7 +3,7 @@ from urls import *
 from folder import Folder
 from file import File
 from bs4 import BeautifulSoup as bs
-## Make async functions next iteration
+
 class Course():
     def __init__(self,url,link):
         self.course_id = self.get_param(link,'id_curso_ic')
@@ -13,6 +13,7 @@ class Course():
         self.root_folders = []
         self.files = {}
         self.folders = {}
+        self.forms = {}
 
         self.session = None
 
@@ -33,9 +34,6 @@ class Course():
         for folder in folders:
             self.get_folder(folder)
         
-        print(self.folders)
-        print(self.files)
-
     def search_folder_and_files(self,soup,parent):
         folders = soup.find_all(
             'a', href=re.compile('acc_carp=abrir_carpeta'))
@@ -63,11 +61,21 @@ class Course():
 
         return _folders
 
+    def get_forms(self):
+        resp = self.session.get(urls['forms'].format(self.course_id))
+        soup = bs(resp.content, 'html.parser')
+        tables_forms = soup.find_all('table', class_='ColorFondoSubHeader2')
+        for table in tables_forms:
+            form_name = table.td.text.strip()
+            form_id = self.get_param(table.a,'id_cuest')
+            self.forms[form_name] = form_id
+
+        return self.forms
+
     def get_folder(self,folder):
         resp = self.session.get(folder.url)
         soup = bs(resp.content, 'html.parser')
         folders = self.search_folder_and_files(soup,folder)
-
 
     def __str__(self):
         return "{0} {1} {2}".format(self.course_id,self.acronym,self.name)
