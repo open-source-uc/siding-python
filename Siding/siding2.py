@@ -89,15 +89,15 @@ class Siding():
             'nombre_carpeta': folder_name,
             'privacidad': privacidad
         }
-        if parent_folder:
+        if parent_id:
             data['id_parent'] = parent_id
             resp = self._session.post(
-                _urls['subfolder'].format(course_id),
+                Siding._urls['subfolder'].format(course_id),
                 data=data,
             )
         else: 
             resp = self._session.post(
-                _urls['folder'].format(course_id),
+                Siding._urls['folder'].format(course_id),
                 data=data,
             )
         return resp,
@@ -194,11 +194,10 @@ class Siding():
         _urls = Siding._urls
         resp = self._session.get(_urls['courses'])
         soup = bs(resp.content, 'html.parser')
-
-        courses = self._get_courses(soup, 'alumno')
+        #courses = self._get_courses(soup, 'alumno')
         admin = self._get_courses(soup, "administrador")
-        teaching = self._get_courses(soup, "donde es ayudante")
-
+        #teaching = self._get_courses(soup, "donde es ayudante")
+        print(admin)
         #self.courses = [Course(_urls['base'],curso) for curso in courses]
         self.admin = [Course(_urls['base'],curso) for curso in  admin]
         #self.teaching = [Course(_urls['base'],curso) for curso in teaching]
@@ -206,7 +205,6 @@ class Siding():
         #[(course.get_file_tree(self._session)) for course in self.courses]
         [(course.get_file_tree(self._session)) for course in self.admin]
         #[(course.get_file_tree(self._session)) for course in self.teaching]
-        
         self.organizations = self.create_organizations(self.admin)
 
         #this should return a json response 
@@ -232,8 +230,12 @@ def main():
     s1 = Siding()
     s1.get_courses()
     iic = s1.organizations['IIC1103']
+    #iic.create_folder('Tareas')
     #iic.delete_file('rubrica_t3.xlsx')
-    iic.upload_file('Interrogaciones','Interrogacion 2','interrogacion2.pdf','/Users/mjjunemann/GDrive/Universidad - Ayudantias/Intro2017_1/Is/Interrogacion 2/iic1103-enunciado-i2.pdf')
+    #iic.upload_file('Tareas','Tarea 1 - Enunciado','tarea1.pdf','/Users/mjjunemann/Downloads/tarea-1-intro.pdf')
+    #iic.upload_file('Tareas','Tarea 1 - main.py','main.py','/Users/mjjunemann/Downloads/main.py')
+    iic.upload_file('Tareas','Tarea 1 - Tarea 1','Tarea_1.py','/Users/mjjunemann/Downloads/Tarea_1.py')
+    #iic.delete_file('tarea1.py')
     #iic.upload_file('Interrogaciones Pasadas','Compilados I2s','compilado_i2.zip','/Users/mjjunemann/GDrive/Universidad - Ayudantias/Intro2017_1/Material/Interrogaciones Pasadas/Interrogacion 2/PreparacionI2.zip')
     #print(iic.new_form('Tarea 2','03-05-2017','00:00','17-05-2017','23:59'))
     # print(iic.new_form())

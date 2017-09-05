@@ -51,7 +51,7 @@ class Siding():
             'sh': '',
             'cd': ''
         }
-        async with self.session.get(urls['login'], params=payload) as resp:
+        async with self.session.post(urls['login'], data=payload) as resp:
             data = await resp.text()
             self.logged = self.__check_successful_login(data)
             if self.logged:

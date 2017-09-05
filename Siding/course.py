@@ -36,7 +36,8 @@ class Course():
             self.get_folder(folder)
         
     def search_folder_and_files(self,soup,parent):
-        time.sleep(2)
+        time.sleep(0.5)
+        print(parent)
         folders = soup.find_all(
             'a', href=re.compile('acc_carp=abrir_carpeta'))
         files = soup.find_all(
@@ -75,7 +76,7 @@ class Course():
         return self.forms
 
     def get_folder(self,folder):
-        time.sleep(2)
+        time.sleep(0.5)
         resp = self.session.get(folder.url)
         soup = bs(resp.content, 'html.parser')
         folders = self.search_folder_and_files(soup,folder)

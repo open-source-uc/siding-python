@@ -1,4 +1,4 @@
-
+import time
 class Organization():
   def __init__(self,courses,siding):
     self.acronym = courses[0].acronym
@@ -59,17 +59,24 @@ class Organization():
     pass
   
   def create_folder(self,folder_name):
-    folders = folder_name.split("/")    
-    if not(self.folders[folder_name]):
-      
+    #folders = folder_name.split("/")
+    create_folder = self.siding.new_folder
+    for course in self.courses:
+      if not(folder_name in course.folders.values()):
+        print('Creando carpeta ', folder_name)
+        res = create_folder(course.course_id,folder_name)
+      else: 
+        print('I got this shit')
+    """    if not(self.folders[folder_name]):
       pass
-    pass
+    pass"""
 
   def upload_file(self,folder, desc, ffile, filepath=None, pos=2, vis='si'):
     upload = self.siding.upload_file
     folders = self.folders[folder]
     attemps = []
     for course,folder in zip(self.courses,folders):
+      time.sleep(1)
       res = upload(course.course_id,folder.folder_id,desc,ffile,filepath,pos,vis)
       attemps.append((res,res.status_code))
     return attemps
