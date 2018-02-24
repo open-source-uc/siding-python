@@ -4,11 +4,11 @@ import re
 from requests import Request, Session
 
 from bs4 import BeautifulSoup as bs
-from course import Course
-from organization import Organization
-from decorators import check
+#from course import Course
+#from organization import Organization
+#from decorators import check
 
-import siding_types as SidingTypes
+#import siding_types as SidingTypes
 
 class Siding():
     _urls = {

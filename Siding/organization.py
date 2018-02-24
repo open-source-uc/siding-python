@@ -63,7 +63,7 @@ class Organization():
     create_folder = self.siding.new_folder
     for course in self.courses:
       if not(folder_name in course.folders.values()):
-        print('Creando carpeta ', folder_name)
+        print('Creando carpeta ', folder_name, course)
         res = create_folder(course.course_id,folder_name)
       else: 
         print('I got this shit')

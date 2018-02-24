@@ -85,7 +85,7 @@ class Siding():
     def new_folder(self, course_id, folder_name, parent_id=None, privacidad='publico'):
         data = {
             'orden_orig': '',
-            'orden': "4",  #Al final
+            'orden': "1",  #Al final
             'nombre_carpeta': folder_name,
             'privacidad': privacidad
         }
@@ -100,6 +100,9 @@ class Siding():
                 Siding._urls['folder'].format(course_id),
                 data=data,
             )
+            print(resp)
+            print(resp.text)
+            
         return resp,
     def upload_file(self, course_id, folder_id, desc, ffile, filepath=None, pos=2, vis='si'):
         if not(vis in ['si', 'no']):
@@ -230,11 +233,15 @@ def main():
     s1 = Siding()
     s1.get_courses()
     iic = s1.organizations['IIC1103']
+    #iic.create_folder('Laboratorios')
     #iic.create_folder('Tareas')
     #iic.delete_file('rubrica_t3.xlsx')
-    #iic.upload_file('Tareas','Tarea 1 - Enunciado','tarea1.pdf','/Users/mjjunemann/Downloads/tarea-1-intro.pdf')
+    iic.upload_file('Laboratorio 7','Laboratorio 7 - Archivos','Laboratorio_7.zip','/Users/mjjunemann/Downloads/Laboratorio 7.zip')
+    #iic.upload_file('Material Pasado','Compilado I1','Compilado I1.zip','/Users/mjjunemann/Downloads/Compilado I1.zip')
+    #iic.upload_file('Material Pasado','Compilado I2','Compilado I2.zip','/Users/mjjunemann/Downloads/Compilado I2.zip')
+    #iic.upload_file('Material Pasado','Compilado Examen','Compilado EX.zip','/Users/mjjunemann/Downloads/Compilado Examen.zip')
     #iic.upload_file('Tareas','Tarea 1 - main.py','main.py','/Users/mjjunemann/Downloads/main.py')
-    iic.upload_file('Tareas','Tarea 1 - Tarea 1','Tarea_1.py','/Users/mjjunemann/Downloads/Tarea_1.py')
+    #iic.upload_file('Tareas','Tarea 1 - Tarea 1','Tarea_1.py','/Users/mjjunemann/Downloads/Tarea_1.py')
     #iic.delete_file('tarea1.py')
     #iic.upload_file('Interrogaciones Pasadas','Compilados I2s','compilado_i2.zip','/Users/mjjunemann/GDrive/Universidad - Ayudantias/Intro2017_1/Material/Interrogaciones Pasadas/Interrogacion 2/PreparacionI2.zip')
     #print(iic.new_form('Tarea 2','03-05-2017','00:00','17-05-2017','23:59'))

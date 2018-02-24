@@ -13,15 +13,16 @@ def check(*args):
         return wrapper
     return check_arguments
 
+bar = check((str,), (int, [1, 2, 3]))
 
-@check((str,), (int, [1, 2, 3]))
+@bar
 def foo(str1, int):
     print(str1)
 
-
+bar2 = bar(foo)
 def main():
     foo("hola", 3)
-
+    bar2("hola",3)
 
 if __name__ == '__main__':
     main()

@@ -4,16 +4,13 @@ import re
 from requests import Request, Session
 
 from bs4 import BeautifulSoup as bs
-from course import Course
-from organization import Organization
-from decorators import check
+#from course import Course
+#from organization import Organization
+#from decorators import check
 
-import siding_types as SidingTypes
+#import siding_types as SidingTypes
 
 class Siding():
-    _instance = None
-    
-
     _urls = {
         'login': 'https://intrawww.ing.puc.cl/siding/index.phtml',
         'base': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/',
@@ -22,37 +19,27 @@ class Siding():
         'del_file': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml?accion_curso=carpetas&acc_carp=borrar_archivo&id_curso_ic={0}&id_carpeta={1}&id_archivo={2}',
         'courses': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml',
         'new_form': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml?accion_curso=cuestionarios&acc_cuest=insert_cuest&id_curso_ic={0}',
-        'del_form': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml?accion_curso=cuestionarios&acc_cuest=borrar_cuest&id_cuest={1}&id_curso_ic={0}',
         'add_question': 'https://intrawww.ing.puc.cl/siding/dirdes/ingcursos/cursos/index.phtml?accion_curso=cuestionarios&acc_cuest=nueva_pregunta&id_cuest={1}&id_curso_ic={0}'
     }
 
-    def __new__(class_, *args, **kwargs):
-      if not isinstance(class_._instance, class_):
-        class_._instance = object.__new__(class_, *args, **kwargs)
-      return class_._instance
-
     def __init__(self):
-        self.organizations = {}
-        self.login()
+        #self.login()
+        pass
 
-    def login(self):
-        if hasattr(self,'logged') and self.logged:
-          return None
+    def login(self,user,password):
+
         _urls = Siding._urls
         payload = {
-            'login': os.environ['USER'],
-            'passwd': os.environ['PASSWD'],
+            'login': user,
+            'passwd': password,
             'sw': '',
             'sh': '',
             'cd': ''
         }
         self._session = Session()
         resp = self._session.post(_urls['login'], data=payload)
-        if resp.status_code == 200:
-          self.logged = True
         return resp
-    
-    
+
     def post_notice(self, nrc, curso, asunto, aviso):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded; charset=iso-8859-1"}
@@ -128,12 +115,8 @@ class Siding():
             data=data,
         )
         result = re.search(r'\?accion_curso=cuestionarios&acc_cuest=nueva_pregunta&id_cuest=(\d+)',resp.text)
-        return resp,result.group(1)
-    def delete_form(self,course_id,form_id):
-        _urls = Siding._urls
-        resp = self._session.get(
-            _urls['del_form'].format(course_id, form_id))
-        return resp
+        return resp,result.group(0)
+
     def form_add_question(self,course_id,form_id,question):
         _urls = Siding._urls
 
@@ -158,6 +141,8 @@ class Siding():
             data=data,
         )
         
+
+        pass
     def _get_courses(self, soup, string):
         td = soup.find_all('td', string=re.compile(string))
         links = self.get_links_from_table(td[0])
@@ -173,11 +158,9 @@ class Siding():
         teaching = self._get_courses(soup, "donde es ayudante")
 
         self.admin = [Course(_urls['base'],curso) for curso in  admin]
-        [(course.get_file_tree(self._session),course.get_forms()) for course in self.admin]
+        [course.get_file_tree(self._session) for course in self.admin]
         self.organizations = self.create_organizations(self.admin)
-
-        
-        return courses,admin,teaching
+        print(self.organizations)
 
     def create_organizations(self,courses):
         organizations = {}
@@ -185,7 +168,7 @@ class Siding():
             if not(course.acronym in organizations):
                 organizations[course.acronym] = []
             organizations[course.acronym].append(course)
-        organizations = {acronym:Organization(courses,self) 
+        organizations = {acronym:Organization(courses) 
             for acronym,courses in organizations.items()}
         return organizations
 
@@ -196,15 +179,11 @@ class Siding():
         return links
 
 def main():
-    s1 = Siding()
-    s1.get_courses()
-    iic = s1.organizations['IIC1103']
-    iic.upload_file('Tareas','Tarea 2','tarea2.pdf')
-    #print(iic.new_form('Tarea 2','03-05-2017','00:00','17-05-2017','23:59'))
-    # print(iic.new_form())
-    #	r = s.upload_homework(desc,ffile)
+    s = Siding()
+#	r = s.upload_homework(desc,ffile)
     # print(r.text)
     # print(r.status_code)
+    s.get_courses()
 
     #r2 = s.delete_file()
     # print(r2.text)
